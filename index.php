@@ -1,34 +1,34 @@
 <?php
+// Vote folder:
+$vote_folder = "/votes";
+$app_title = "Shitty Vote";
 session_start();
 
 //votereset();
 
 // Read the JSON file
-$menujson = file_get_contents("/var/www/html/menu.json");
+$menujson = file_get_contents("menu.json");
 $menu = json_decode($menujson, true);
+$voteFile = $vote_folder . "/votes.txt";
 
 // Function to get votes
 function getVotes() {
-    $voteFile = "/votes/votes.txt";
+    global $voteFile;
     if (!file_exists($voteFile)) {
-        file_put_contents("/votes/votes.txt", "");
+        file_put_contents($voteFile, "");
         return [];
     }
     return json_decode(file_get_contents($voteFile), true);
 }
 
 function votereset(){
+   global $voteFile;
    session_unset();
-   file_put_contents("/votes/votes.txt", "");
+   file_put_contents($voteFile, "");
 }
 
-function getTitle(){
-  return file_get_contents('/votes/title.txt');
-}
-
-
-// Function to save votes
 function saveVote($section, $content) {
+    global $voteFile;
     if($_SESSION[$section]['voted'])
       return;
 
@@ -43,7 +43,7 @@ function saveVote($section, $content) {
 
     $votes[$content]++;
 
-    file_put_contents("/votes/votes.txt", json_encode($votes));
+    file_put_contents($voteFile, json_encode($votes));
     $_SESSION[$section]['voted'] = true;
 }
 
@@ -68,7 +68,7 @@ if (isset($_POST['section']) && isset($_POST['content'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The Shittiest Voting System Ever</title>
+    <title><?php echo $app_title; ?></title>
     <style>
     body {
     font-family: Arial, sans-serif;
@@ -143,7 +143,7 @@ input[type="button"]:hover {
 </head>
 <body>
     <div class="votecontents">
-    <h1><?php echo getTitle(); ?></h1>
+    <h1><?php echo $app_title; ?></h1>
     <?php foreach ($menu as $section => $contents):
         $sectionmd5 = md5($section);
        	if (!isset($_SESSION[$sectionmd5])) {
@@ -194,14 +194,14 @@ input[type="button"]:hover {
 
     <script type="text/javascript">
         beforeSubmit = function(f){
-           if (confirm('Confirmez-vous le vote ? Il est définitif')){
+           if (confirm('Sure, 100%?')){
                f.submit();
            }
         }
     </script>
 
     <div style="text-align: center; font-size: 0.9em;">
-	Shitty code &copy; 2024 <a href="https://morve.us">me</a><br />
+	Shitty code &copy; 2024 <a href="https://morve.us">Morveus</a><br />
 	Proudly hosted on a very overkill 16 nodes cluster in my basement (84 cores, 400 GB RAM)
 	</p>
     </div>

@@ -1,0 +1,17 @@
+{
+    "Section A": [
+	"Option A1",
+	"Option A2",
+	"Option A3"
+    ],
+    "Section B": [
+        "Option B1",
+        "Option B2",
+        "Option B3"
+    ],
+    "Section X": [
+        "Option X1",
+        "Option X2",
+        "Option X3"
+    ]
+}
