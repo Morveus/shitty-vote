@@ -220,7 +220,7 @@ input[type="button"]:hover {
     </script>
 
     <div style="text-align: center; font-size: 0.9em;">
-	Shitty code &copy; 2024 <a href="https://morve.us">Morveus</a><br />
+	Shitty code &copy; 2024 <a href="https://morve.us">Morveus</a> -- <a href="https://github.com/Morveus/shitty-vote">Github Repo</a><br />
 	Proudly hosted on a very overkill 16 nodes cluster in my basement (84 cores, 400 GB RAM)
 	</p>
     </div>
