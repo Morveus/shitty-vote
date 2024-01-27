@@ -4,7 +4,6 @@ $vote_folder = "/votes";
 $app_title = "Shitty Vote";
 session_start();
 
-//votereset();
 
 // Read the JSON file
 $menujson = file_get_contents("menu.json");
@@ -19,12 +18,6 @@ function getVotes() {
         return [];
     }
     return json_decode(file_get_contents($voteFile), true);
-}
-
-function votereset(){
-   global $voteFile;
-   session_unset();
-   file_put_contents($voteFile, "");
 }
 
 function saveVote($section, $content) {
@@ -108,6 +101,10 @@ ul li {
     background: #17b44e9c;
 }
 
+.exaequo {
+    background: #b45c179c;
+}
+
 form {
     position: absolute;
     right: 10px;
@@ -156,13 +153,22 @@ input[type="button"]:hover {
         $votes = getVotes();
         $highestvote = 0;
         $totalvotes = 0;
+	$exaequo = 0;
         foreach ($contents as $content){
           $contentmd5 = md5($content);
           $n = getEntryVotes($contentmd5);
           $totalvotes += $n;
           if($n > $highestvote)
-            $highestvote = $n;
+             $highestvote = $n;
         }
+
+	foreach ($contents as $content){
+	  $contentmd5 = md5($content);
+          $n = getEntryVotes($contentmd5);
+          if($n > 0 && $n == $highestvote){
+             $exaequo++;
+          }
+	}
 
 	?>
         <h2><?php echo htmlspecialchars($section); ?> (<?php echo $totalvotes; ?> votes)</h2>
@@ -170,13 +176,26 @@ input[type="button"]:hover {
             <?php foreach ($contents as $content):
 		$contentmd5 = md5($content);
                 $n = getEntryVotes($contentmd5);
-                if($totalvotes > 0)
+                if($totalvotes > 0){
                    $percent = ($n * 100 / $totalvotes);
-                else
+                }else{
                    $percent = 0;
+                }
 		$pct = number_format($percent, 0, ".", "");
+
+                $showClass = false;
+                $class = "highest";
+		if($n > 0 && $n == $highestvote){
+		   $showClass = true;
+		}
+
+		if($exaequo > 1 && $n == $highestvote){
+	           $class = "exaequo";
+		   $showClass = true;
+		}
+
             ?>
-                <li <?php if($n>0 && $n == $highestvote) echo ' class="highest"'; ?>>
+                <li <?php if($showClass) echo " class=\"$class\""; ?>>
                     <div><?php echo htmlspecialchars($content); ?> (<?php echo $n; ?> votes / <?php echo $pct; ?>%)</div>
                     <?php if (!$userVoted): ?>
                         <form method="post">
