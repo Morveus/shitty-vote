@@ -1,6 +1,5 @@
 # shitty-vote
-
-A shitty voting system without any database nor user accounts
+A self-hostable shitty voting system without any database nor user accounts
 
 # Setup
 - Create a "/votes" folder (or update the corresponding variable)
